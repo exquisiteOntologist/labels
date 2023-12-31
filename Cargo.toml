@@ -1,0 +1,17 @@
+[package]
+name = "labels"
+version = "0.1.0"
+authors = ["JV <auburn.mutiny0e@icloud.com>"]
+edition = "2021"
+
+[dependencies]
+
+
+[profile.release]
+
+
+[build]
+target = "labels"
+
+[[bin]]
+name = "labels"
