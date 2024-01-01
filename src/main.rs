@@ -120,15 +120,17 @@ fn clean_word<'a>(word: &'a str) -> Result<&'a str, Box<dyn Error>> {
     // https://stackoverflow.com/questions/51982999/slice-a-string-containing-unicode-chars
     let mut word_clean: &str = word;
     while !word_clean.is_empty() && get_first_char(&word_clean).is_alphanumeric() == false {
-        word_clean = utf8_slice(word_clean, 1, word_clean.len() - 1).unwrap_or("");
+        let word_len = word_clean.char_indices().count();
+        // word_clean = utf8_slice(word_clean, 1, word_clean.len() - 1).unwrap_or("");
+        word_clean = utf8_slice_mine(word_clean, 1, word_len - 1);
     }
     while !word_clean.is_empty() && get_last_char(word_clean).is_alphanumeric() == false {
-        let last_byte_size = str_last_char_size(word_clean);
+        // let last_byte_size = str_last_char_size(word_clean);
         let word_len = word_clean.char_indices().count();
-        println!(
-            "word length {:1} and {:2} and {:3}",
-            word_clean, word_len, last_byte_size
-        );
+        // println!(
+        //     "word length {:1} and {:2} and {:3}",
+        //     word_clean, word_len, last_byte_size
+        // );
         // word_clean = utf8_slice(word_clean, 0, word_len - 1).unwrap_or("");
         word_clean = utf8_slice_mine(word_clean, 0, word_len - 1);
     }
@@ -137,11 +139,11 @@ fn clean_word<'a>(word: &'a str) -> Result<&'a str, Box<dyn Error>> {
 }
 
 pub fn utf8_slice_mine(string: &str, start: usize, end: usize) -> &str {
-    println!("{:?}", string.chars());
-    println!("s {:1} e {:2}", start, end);
+    // println!("{:?}", string.chars());
+    // println!("s {:1} e {:2}", start, end);
     let start_pos = string.char_indices().nth(start).unwrap().0;
     let end_pos = string.char_indices().nth(end).unwrap().0;
-    println!("sp {:1} ep {:2}", start_pos, end_pos);
+    // println!("sp {:1} ep {:2}", start_pos, end_pos);
     &string[start_pos..end_pos]
 }
 
