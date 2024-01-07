@@ -13,7 +13,7 @@ pub fn clean_word<'a>(word: &'a str) -> Result<&'a str, Box<dyn Error>> {
         word_clean = utf8_slice_mine(word_clean, 1, word_len - 1);
     }
     while !word_clean.is_empty() && str_last_char(word_clean).is_alphanumeric() == false {
-        if word_clean.ends_with("’") {
+        if (word_clean.ends_with("s’")) && !word_clean.ends_with(".’") {
             break;
         }
         // let last_byte_size = str_last_char_size(word_clean);
