@@ -40,7 +40,7 @@ pub fn tally_intersecting_phrases<'a>(
 
     // each tally represents a single term
     for i in 1..phrase_tallies.len() {
-        let (prior_phrase, mut prior_tally) = if i == 1 {
+        let (prior_phrase, prior_tally) = if i == 1 {
             &phrase_tallies[i - 1]
         } else {
             &new_phrase_tallies[i - 1]
@@ -49,12 +49,14 @@ pub fn tally_intersecting_phrases<'a>(
 
         // because of our alphabetical sorting, the prior is always shorter
         // (this variable is redundant)
-        let prior_longer: bool = prior_phrase.len() > phrase.len();
-        let shorter_len: usize = if prior_longer {
-            phrase.len()
-        } else {
-            prior_phrase.len()
-        };
+        // let prior_longer: bool = false;
+        let shorter_len: usize = prior_phrase.len();
+        // let prior_longer: bool = prior_phrase.len() > phrase.len();
+        // let shorter_len: usize = if prior_longer {
+        //     phrase.len()
+        // } else {
+        //     prior_phrase.len()
+        // };
 
         // here we are iterating through the words of the
         // current and prior phrases,
@@ -75,20 +77,23 @@ pub fn tally_intersecting_phrases<'a>(
         // should both gain relevance,
         // not just the longer?
         if shorter_fully_in_longer {
-            if prior_longer {
-                // points to prior
-                // this only works for the first iteration
-                // & it's redundant anyway (see note about ABC sorting)
-                prior_tally += tally;
-            } else {
-                // else current longer, points to longer
-                tally += prior_tally;
-            }
+            // if prior_longer {
+            //     // points to prior
+            //     // this only works for the first iteration
+            //     // & it's redundant anyway (see note about ABC sorting)
+            //     prior_tally += tally;
+            // }
+            // } else {
+            //     // else current longer, points to longer
+            //     tally += prior_tally;
+            // }
+            // assuming prior phrase is shorter
+            tally += prior_tally;
         }
 
         // since we start at one we also have to add the prior to the list (pos 0)
         if i == 1 {
-            new_phrase_tallies.push((prior_phrase.to_vec(), prior_tally));
+            new_phrase_tallies.push((prior_phrase.to_vec(), *prior_tally));
         }
         new_phrase_tallies.push((phrase.to_vec(), tally));
     }

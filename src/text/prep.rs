@@ -16,13 +16,7 @@ pub fn clean_word<'a>(word: &'a str) -> Result<&'a str, Box<dyn Error>> {
         if (word_clean.ends_with("s’")) && !word_clean.ends_with(".’") {
             break;
         }
-        // let last_byte_size = str_last_char_size(word_clean);
         let word_len = str_get_len(word_clean);
-        // println!(
-        //     "word length {:1} and {:2} and {:3}",
-        //     word_clean, word_len, last_byte_size
-        // );
-        // word_clean = utf8_slice(word_clean, 0, word_len - 1).unwrap_or("");
         word_clean = utf8_slice_mine(word_clean, 0, word_len - 1);
     }
     println!("{:?}", word_clean);
@@ -30,11 +24,11 @@ pub fn clean_word<'a>(word: &'a str) -> Result<&'a str, Box<dyn Error>> {
 }
 
 pub fn word_without_extensions<'a>(word: &'a str) -> Result<&'a str, Box<dyn Error>> {
+    if word.len() < 3 {
+        return Ok(word);
+    }
     let mut word_new: &str = word;
     let word_len: usize = str_get_len(word_new);
-    if word_new.len() < 3 {
-        return Ok(word_new);
-    }
     if word_new.ends_with("'s") || word_new.ends_with("’s") {
         word_new = utf8_slice_mine(word_new, 0, word_len - 2);
         return Ok(word_new);
