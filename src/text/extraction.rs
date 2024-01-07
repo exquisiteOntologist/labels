@@ -1,6 +1,6 @@
 use crate::utils::strings::str_last_char;
 
-use super::prep::clean_word;
+use super::prep::{clean_word, word_without_extensions};
 
 const UNWANTED_WORDS: [&str; 8] = ["\"", "'", "‘", " ", "[", "]", "(", ")"];
 // const UNWANTED_CHARS: [char; 8] = ['"', '\'', '‘', ' ', '[', ']', '(', ')'];
@@ -39,7 +39,7 @@ pub fn words_extraction(text: &str) -> Vec<Vec<&str>> {
         }
 
         // println!("word {:?}", word_clean);
-        words_wanted.push(vec![word_clean]);
+        words_wanted.push(vec![word_without_extensions(word_clean).unwrap()]);
 
         // Here we can create an iterator and slice the slice
         // based on where each unwanted character is
@@ -50,13 +50,13 @@ pub fn words_extraction(text: &str) -> Vec<Vec<&str>> {
         let is_title_case = word.chars().nth(0).unwrap().is_uppercase();
         if last_in_sentence && is_title_case {
             last_title_or_name.push(word_clean);
-            words_wanted.push(last_title_or_name.clone());
+            words_wanted.push(last_title_or_name.to_vec());
             last_title_or_name.clear();
         } else if is_title_case {
             last_title_or_name.push(word_clean);
         } else if last_title_or_name.len() > 0 {
             // let combined_word = last_title_or_name.to_owned().join(" ").as_str();
-            words_wanted.push(last_title_or_name.clone());
+            words_wanted.push(last_title_or_name.to_vec());
             last_title_or_name.clear();
         }
     }

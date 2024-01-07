@@ -34,9 +34,9 @@ fn my_basic_experiment() -> Result<(), Box<dyn Error>> {
         );
     }
 
-    let new_tallies = tally_intersecting_phrases(word_tallies);
+    let tallies_inc_intersections = tally_intersecting_phrases(&word_tallies);
 
-    for (word, tally) in new_tallies {
+    for (word, tally) in tallies_inc_intersections {
         println!(
             "tally and intersections: {:1} {:2}",
             word.join(" ").to_string(),
