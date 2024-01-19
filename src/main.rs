@@ -6,13 +6,23 @@ use labels::scoring::tally::{tally_intersecting_phrases, tally_phrases};
 use labels::text::extraction::words_extraction;
 
 fn main() -> io::Result<()> {
-    _ = my_basic_experiment();
+    _ = my_basic_experiment(SAMPLE_ARTICLE);
 
     Ok(())
 }
 
-fn my_basic_experiment() -> Result<(), Box<dyn Error>> {
-    let mut words_wanted: Vec<Vec<&str>> = words_extraction(&SAMPLE_ARTICLE);
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_tally() {
+        _ = my_basic_experiment(SAMPLE_ARTICLE);
+    }
+}
+
+fn my_basic_experiment(article: &str) -> Result<(), Box<dyn Error>> {
+    let mut words_wanted: Vec<Vec<&str>> = words_extraction(article);
 
     words_wanted.sort();
 
@@ -34,11 +44,24 @@ fn my_basic_experiment() -> Result<(), Box<dyn Error>> {
         );
     }
 
-    let tallies_inc_intersections = tally_intersecting_phrases(&word_tallies);
+    let mut tallies_inc_intersections = tally_intersecting_phrases(&word_tallies);
 
-    for (word, tally) in tallies_inc_intersections {
+    for (word, tally) in &tallies_inc_intersections {
         println!(
             "tally and intersections: {:1} {:2}",
+            word.join(" ").to_string(),
+            tally.to_string()
+        );
+    }
+
+    tallies_inc_intersections.sort_by(|(_, a), (_, b)| b.cmp(a));
+    // above wrong TOTALLY
+
+    for i in 0..10 {
+        let (word, tally) = &tallies_inc_intersections[i];
+        println!(
+            "top phrase: {:1} {:2} {:3}",
+            i,
             word.join(" ").to_string(),
             tally.to_string()
         );
