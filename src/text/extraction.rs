@@ -1,12 +1,8 @@
 use crate::utils::strings::str_last_char;
+use crate::vocab::common::{UNWANTED_CONJUGATES, UNWANTED_WORDS};
 
 use super::prep::{clean_word, word_without_extensions};
 
-const UNWANTED_WORDS: [&str; 8] = ["\"", "'", "‘", " ", "[", "]", "(", ")"];
-const UNWANTED_CONJUGATES: [&str; 18] = [
-    "a", "and", "as", "by", "for", "In", "in", "of", "or", "that", "The", "the", "their", "They",
-    "they", "to", "were", "with",
-];
 // const UNWANTED_CHARS: [char; 8] = ['"', '\'', '‘', ' ', '[', ']', '(', ')'];
 
 /// From text extract individual words into a vector
