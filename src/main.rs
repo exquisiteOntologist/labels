@@ -26,23 +26,11 @@ fn my_basic_experiment(article: &str) -> Result<(), Box<dyn Error>> {
 
     words_wanted.sort();
 
-    // for word in words_wanted.clone() {
-    //     // println!("word: {:?}", word);
-    // }
-
     // count similars
     let word_tallies: Vec<(Vec<&str>, i32)> = tally_phrases(&words_wanted);
 
     // change sorting from alphabetical to tally score
     // word_tallies.sort_by(|(_, a), (_, b)| a.cmp(b));
-
-    for (word, tally) in &word_tallies {
-        println!(
-            "tally: {:1} {:2}",
-            word.join(" ").to_string(),
-            tally.to_string()
-        );
-    }
 
     let mut tallies_inc_intersections = tally_intersecting_phrases(&word_tallies);
 
@@ -55,7 +43,6 @@ fn my_basic_experiment(article: &str) -> Result<(), Box<dyn Error>> {
     }
 
     tallies_inc_intersections.sort_by(|(_, a), (_, b)| b.cmp(a));
-    // above wrong TOTALLY
 
     for i in 0..10 {
         let (word, tally) = &tallies_inc_intersections[i];

@@ -3,6 +3,10 @@ use crate::utils::strings::str_last_char;
 use super::prep::{clean_word, word_without_extensions};
 
 const UNWANTED_WORDS: [&str; 8] = ["\"", "'", "‘", " ", "[", "]", "(", ")"];
+const UNWANTED_CONJUGATES: [&str; 18] = [
+    "a", "and", "as", "by", "for", "In", "in", "of", "or", "that", "The", "the", "their", "They",
+    "they", "to", "were", "with",
+];
 // const UNWANTED_CHARS: [char; 8] = ['"', '\'', '‘', ' ', '[', ']', '(', ')'];
 
 /// From text extract individual words into a vector
@@ -39,7 +43,14 @@ pub fn words_extraction(text: &str) -> Vec<Vec<&str>> {
         }
 
         // println!("word {:?}", word_clean);
-        words_wanted.push(vec![word_without_extensions(word_clean).unwrap()]);
+
+        // if it's a single word phrase and it's a conjugate we don't want it as a label
+        // I expect it to be faster to just add and remove these words from the list instead
+        // since it's alphabetical, we can find the 1st conjugate in the list and remove it,
+        // and then continue searching the list from that index for the 2nd conjugate...
+        if UNWANTED_CONJUGATES.contains(&word_clean) == false {
+            words_wanted.push(vec![word_without_extensions(word_clean).unwrap()]);
+        }
 
         // Here we can create an iterator and slice the slice
         // based on where each unwanted character is
