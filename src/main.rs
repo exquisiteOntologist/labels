@@ -3,7 +3,7 @@ use std::io;
 
 use labels::samples::articles::SAMPLE_ARTICLE;
 use labels::scoring::tally::{tally_intersecting_phrases, tally_phrases};
-use labels::text::extraction::words_extraction;
+use labels::text::extraction::phrase_extraction;
 
 fn main() -> io::Result<()> {
     _ = my_basic_experiment(SAMPLE_ARTICLE);
@@ -22,7 +22,7 @@ mod tests {
 }
 
 fn my_basic_experiment(article: &str) -> Result<(), Box<dyn Error>> {
-    let mut words_wanted: Vec<Vec<&str>> = words_extraction(article);
+    let mut words_wanted: Vec<Vec<&str>> = phrase_extraction(article);
 
     words_wanted.sort();
 

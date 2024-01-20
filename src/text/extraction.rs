@@ -3,14 +3,10 @@ use crate::vocab::common::{UNWANTED_CONJUGATES, UNWANTED_WORDS};
 
 use super::prep::{clean_word, word_without_extensions};
 
-// const UNWANTED_CHARS: [char; 8] = ['"', '\'', '‘', ' ', '[', ']', '(', ')'];
-
-/// From text extract individual words into a vector
-pub fn words_extraction(text: &str) -> Vec<Vec<&str>> {
-    let mut ex_words = UNWANTED_WORDS.into_iter();
-    // let mut ex_chars = UNWANTED_CHARS.into_iter();
+/// From text extract individual words or phrases into a vector
+pub fn phrase_extraction(text: &str) -> Vec<Vec<&str>> {
     let words: Vec<&str> = text.split(&[' ', '[', ']', '(', ')']).collect();
-    let mut words_wanted: Vec<Vec<&str>> = vec![vec![]];
+    let mut phrases_out: Vec<Vec<&str>> = vec![vec![]];
     let mut last_title_or_name: Vec<&str> = vec![];
 
     for word in words {
@@ -23,7 +19,7 @@ pub fn words_extraction(text: &str) -> Vec<Vec<&str>> {
 
         let word_lower = word.to_lowercase();
         let word_lower_str = word_lower.as_str();
-        if ex_words.find(|&w| w == word_lower_str).is_some() {
+        if UNWANTED_WORDS.contains(&word_lower_str) {
             continue;
         }
 
@@ -45,7 +41,7 @@ pub fn words_extraction(text: &str) -> Vec<Vec<&str>> {
         // since it's alphabetical, we can find the 1st conjugate in the list and remove it,
         // and then continue searching the list from that index for the 2nd conjugate...
         if UNWANTED_CONJUGATES.contains(&word_clean) == false {
-            words_wanted.push(vec![word_without_extensions(word_clean).unwrap()]);
+            phrases_out.push(vec![word_without_extensions(word_clean).unwrap()]);
         }
 
         // Here we can create an iterator and slice the slice
@@ -57,16 +53,16 @@ pub fn words_extraction(text: &str) -> Vec<Vec<&str>> {
         let is_title_case = word.chars().nth(0).unwrap().is_uppercase();
         if last_in_sentence && is_title_case {
             last_title_or_name.push(word_clean);
-            words_wanted.push(last_title_or_name.to_vec());
+            phrases_out.push(last_title_or_name.to_vec());
             last_title_or_name.clear();
         } else if is_title_case {
             last_title_or_name.push(word_clean);
         } else if last_title_or_name.len() > 0 {
             // let combined_word = last_title_or_name.to_owned().join(" ").as_str();
-            words_wanted.push(last_title_or_name.to_vec());
+            phrases_out.push(last_title_or_name.to_vec());
             last_title_or_name.clear();
         }
     }
 
-    words_wanted
+    phrases_out
 }
