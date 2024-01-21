@@ -1,5 +1,5 @@
 use crate::utils::strings::str_last_char;
-use crate::vocab::common::{PUNCTUATION, UNWANTED_CONJUGATES};
+use crate::vocab::common::UNWANTED_CONJUGATES;
 
 use super::prep::{clean_word, word_without_extensions};
 
