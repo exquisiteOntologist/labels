@@ -1,5 +1,5 @@
 use crate::utils::strings::str_last_char;
-use crate::vocab::common::{UNWANTED_CONJUGATES, UNWANTED_WORDS};
+use crate::vocab::common::{PUNCTUATION, UNWANTED_CONJUGATES};
 
 use super::prep::{clean_word, word_without_extensions};
 
@@ -19,7 +19,7 @@ pub fn phrase_extraction(text: &str) -> Vec<Vec<&str>> {
 
         let word_lower = word.to_lowercase();
         let word_lower_str = word_lower.as_str();
-        if UNWANTED_WORDS.contains(&word_lower_str) {
+        if PUNCTUATION.contains(&word_lower_str) {
             continue;
         }
 
