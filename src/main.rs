@@ -23,6 +23,8 @@ mod tests {
     }
 }
 
+const MAX_LABELS: usize = 30;
+
 fn my_basic_experiment(article: &str) -> Result<(), Box<dyn Error>> {
     let words_wanted: Vec<Vec<&str>> = phrase_extraction(article);
 
@@ -44,10 +46,16 @@ fn my_basic_experiment(article: &str) -> Result<(), Box<dyn Error>> {
 
     tallies_inc_intersections.sort_by(|(_, a), (_, b)| b.cmp(a));
 
-    for i in 0..10 {
+    let max = if MAX_LABELS > tallies_inc_intersections.len() {
+        tallies_inc_intersections.len()
+    } else {
+        MAX_LABELS
+    };
+
+    for i in 0..max {
         let (word, tally) = &tallies_inc_intersections[i];
         println!(
-            "top phrase: {:1} {:2} {:3}",
+            "top phrase: {:1} \"{:2}\" {:3}",
             i,
             word.join(" ").to_string(),
             tally.to_string()

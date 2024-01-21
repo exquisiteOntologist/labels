@@ -32,8 +32,6 @@ pub fn phrase_extraction(text: &str) -> Vec<Vec<&str>> {
             continue;
         }
 
-        // println!("word {:?}", word_clean);
-
         phrases_out.push(vec![word_without_extensions(word_clean).unwrap()]);
 
         // Here we can create an iterator and slice the slice
