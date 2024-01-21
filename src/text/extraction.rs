@@ -72,7 +72,7 @@ pub fn sans_conjugates<'a>(mut phrases: Vec<Vec<&'a str>>) -> Vec<Vec<&'a str>> 
     let mut p_i: usize = 0;
     let mut for_removal: Vec<usize> = vec![];
     for conjugate in UNWANTED_CONJUGATES {
-        println!("pi {:1} {:2}", p_i, phrases.len());
+        // println!("pi {:1} {:2}", p_i, phrases.len());
         let mut has_matched: bool = false;
         for i in p_i..phrases.len() {
             // println!("pi inside xxx {:1} {:2} {:3}", p_i, i, has_matched);

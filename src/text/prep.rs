@@ -33,7 +33,7 @@ pub fn word_without_extensions<'a>(word: &'a str) -> Result<&'a str, Box<dyn Err
         word_new = utf8_slice_mine(word_new, 0, word_len - 2);
         return Ok(word_new);
     }
-    if word_new.ends_with("s") && !word_new.ends_with("is") {
+    if word_new.ends_with("s") && !word_new.ends_with("s") && !word_new.ends_with("is") {
         word_new = utf8_slice_mine(word_new, 0, word_len - 1);
         return Ok(word_new);
     }
