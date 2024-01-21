@@ -22,9 +22,7 @@ mod tests {
 }
 
 fn my_basic_experiment(article: &str) -> Result<(), Box<dyn Error>> {
-    let mut words_wanted: Vec<Vec<&str>> = phrase_extraction(article);
-
-    words_wanted.sort();
+    let words_wanted: Vec<Vec<&str>> = phrase_extraction(article);
 
     // count similars
     let word_tallies: Vec<(Vec<&str>, i32)> = tally_phrases(&words_wanted);

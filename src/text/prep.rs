@@ -19,7 +19,7 @@ pub fn clean_word<'a>(word: &'a str) -> Result<&'a str, Box<dyn Error>> {
         let word_len = str_get_len(word_clean);
         word_clean = utf8_slice_mine(word_clean, 0, word_len - 1);
     }
-    println!("{:?}", word_clean);
+    // println!("{:?}", word_clean);
     Ok(word_clean)
 }
 

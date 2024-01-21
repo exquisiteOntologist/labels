@@ -13,22 +13,20 @@ pub fn phrase_extraction(text: &str) -> Vec<Vec<&str>> {
         if word.chars().count() == 0 {
             continue;
         }
+
         if word.chars().count() < 2 && word.chars().by_ref().any(|c| c.is_alphanumeric() == false) {
             continue;
         }
 
-        let word_lower = word.to_lowercase();
-        let word_lower_str = word_lower.as_str();
-        if PUNCTUATION.contains(&word_lower_str) {
-            continue;
-        }
-
-        // println!("chars {:?}", word.chars().as_str());
+        // we don't need this because we are already filtering out non-alphanumerics above
+        // if word.len() == 1 && PUNCTUATION.contains(&word) {
+        //     // may be better just to check if it's alpha-numeric?
+        //     continue;
+        // }
 
         let last_char = str_last_char(word);
         let last_in_sentence = last_char == '.' || last_char == ',';
 
-        // TODO: Move the word cleansing to another function
         let word_clean: &str = clean_word(word).unwrap_or(word);
         if word_clean.is_empty() {
             continue;
@@ -36,13 +34,7 @@ pub fn phrase_extraction(text: &str) -> Vec<Vec<&str>> {
 
         // println!("word {:?}", word_clean);
 
-        // if it's a single word phrase and it's a conjugate we don't want it as a label
-        // I expect it to be faster to just add and remove these words from the list instead
-        // since it's alphabetical, we can find the 1st conjugate in the list and remove it,
-        // and then continue searching the list from that index for the 2nd conjugate...
-        if UNWANTED_CONJUGATES.contains(&word_clean) == false {
-            phrases_out.push(vec![word_without_extensions(word_clean).unwrap()]);
-        }
+        phrases_out.push(vec![word_without_extensions(word_clean).unwrap()]);
 
         // Here we can create an iterator and slice the slice
         // based on where each unwanted character is
@@ -64,5 +56,48 @@ pub fn phrase_extraction(text: &str) -> Vec<Vec<&str>> {
         }
     }
 
+    phrases_out.sort();
+
+    // we don't want conjugates as labels
+    phrases_out = sans_conjugates(phrases_out);
+
     phrases_out
+}
+
+/// Removes conjugates by mutating the vector.
+/// **Requires** the phrases input to be sorted alphabetically.
+/// It works by continuing on the last inner loop index from the prior outer item (conjugate),
+/// avoiding going over the previous outer item's identical inner items more than once.
+pub fn sans_conjugates<'a>(mut phrases: Vec<Vec<&'a str>>) -> Vec<Vec<&'a str>> {
+    let mut p_i: usize = 0;
+    let mut for_removal: Vec<usize> = vec![];
+    for conjugate in UNWANTED_CONJUGATES {
+        println!("pi {:1} {:2}", p_i, phrases.len());
+        let mut has_matched: bool = false;
+        for i in p_i..phrases.len() {
+            // println!("pi inside xxx {:1} {:2} {:3}", p_i, i, has_matched);
+            if phrases[i].len() != 1 {
+                continue;
+            }
+
+            if phrases[i][0] == conjugate {
+                for_removal.push(i);
+                has_matched = true;
+                continue;
+            }
+
+            if has_matched {
+                p_i = i + 1;
+                break;
+            }
+        }
+    }
+
+    for_removal.reverse();
+
+    for i in for_removal {
+        phrases.remove(i);
+    }
+
+    phrases
 }
