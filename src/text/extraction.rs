@@ -30,9 +30,6 @@ pub fn phrase_extraction(text: &str) -> Vec<Vec<&str>> {
             }
 
             let word_sans_extensions: &str = word_without_extensions(word_clean).unwrap();
-            if word_sans_extensions.is_empty() {
-                println!("broken word is {:1} {:2}", word_clean, word_sans_extensions);
-            }
             phrases_out.push(vec![word_sans_extensions]);
 
             let is_title_case = !word.is_empty() && word.chars().nth(0).unwrap().is_uppercase();
@@ -46,31 +43,17 @@ pub fn phrase_extraction(text: &str) -> Vec<Vec<&str>> {
 
         // Pushing if not empty outside 'word means we may capture skipped phrase in theoretical scenario
         if last_title_or_name.len() != 0 {
-            let phrase = last_title_or_name.to_vec();
-            if phrase.is_empty() {
-                println!("found empty");
-            }
-            phrases_out.push(phrase);
+            phrases_out.push(last_title_or_name.to_vec());
             last_title_or_name.clear();
         }
     }
 
     // If the very last word was in a phrase, push it too
     if last_title_or_name.len() != 0 {
-        let phrase = last_title_or_name.to_vec();
-        if phrase.is_empty() {
-            println!("found empty at end");
-        }
-        phrases_out.push(phrase);
+        phrases_out.push(last_title_or_name.to_vec());
     }
 
     phrases_out.sort();
-
-    for phrase in &phrases_out {
-        if phrase.is_empty() {
-            println!("found a phrase of 0 at a");
-        }
-    }
 
     // we don't want conjugates as labels
     phrases_out = sans_conjugates(phrases_out);
