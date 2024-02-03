@@ -32,11 +32,15 @@ pub fn phrase_extraction(text: &str) -> Vec<Vec<&str>> {
             let word_sans_extensions: &str = word_without_extensions(word_clean).unwrap();
             phrases_out.push(vec![word_sans_extensions]);
 
-            let is_title_case = !word.is_empty() && word.chars().nth(0).unwrap().is_uppercase();
-            if is_title_case {
+            let is_title_case =
+                !word_clean.is_empty() && word_clean.chars().nth(0).unwrap().is_uppercase();
+            let conjoining =
+                last_title_or_name.len() > 1 && (word_clean == "the" || word_clean == "of");
+            let add_to_phrase = is_title_case || conjoining;
+            if add_to_phrase {
                 last_title_or_name.push(word_clean);
             }
-            if !last_in_sentence && is_title_case {
+            if !last_in_sentence && add_to_phrase {
                 continue 'words;
             }
         }
