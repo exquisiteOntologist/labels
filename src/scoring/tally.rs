@@ -89,6 +89,8 @@ pub fn tally_intersecting_phrases<'a>(
             if is_acronym {
                 tally *= 2;
             }
+        } else {
+            tally *= 2;
         }
 
         // perhaps the shorter AND the longer word
