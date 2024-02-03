@@ -36,19 +36,12 @@ pub fn phrase_extraction(text: &str) -> Vec<Vec<&str>> {
             phrases_out.push(vec![word_sans_extensions]);
 
             let is_title_case = !word.is_empty() && word.chars().nth(0).unwrap().is_uppercase();
-            if last_in_sentence && is_title_case {
+            if is_title_case {
                 last_title_or_name.push(word_clean);
-                phrases_out.push(last_title_or_name.to_vec());
-
-                last_title_or_name.clear();
-                continue 'words;
-            } else if is_title_case {
-                last_title_or_name.push(word_clean);
-
-                // because not clearing phrase vec here, continue to avoid pushing phrase early (see outer)
+            }
+            if !last_in_sentence && is_title_case {
                 continue 'words;
             }
-            // else outer
         }
 
         // Pushing if not empty outside 'word means we may capture skipped phrase in theoretical scenario
@@ -61,7 +54,6 @@ pub fn phrase_extraction(text: &str) -> Vec<Vec<&str>> {
     // If the very last word was in a phrase, push it too
     if last_title_or_name.len() > 0 {
         phrases_out.push(last_title_or_name.to_vec());
-        last_title_or_name.clear();
     }
 
     phrases_out.sort();
