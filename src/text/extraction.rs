@@ -43,13 +43,15 @@ pub fn phrase_extraction(text: &str) -> Vec<Vec<&str>> {
 
         // Pushing if not empty outside 'word means we may capture skipped phrase in theoretical scenario
         if last_title_or_name.len() != 0 {
-            phrases_out.push(last_title_or_name.to_vec());
+            if last_title_or_name.len() > 1 {
+                phrases_out.push(last_title_or_name.to_vec());
+            }
             last_title_or_name.clear();
         }
     }
 
     // If the very last word was in a phrase, push it too
-    if last_title_or_name.len() != 0 {
+    if last_title_or_name.len() > 1 {
         phrases_out.push(last_title_or_name.to_vec());
     }
 
