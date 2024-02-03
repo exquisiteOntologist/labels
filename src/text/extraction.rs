@@ -34,8 +34,9 @@ pub fn phrase_extraction(text: &str) -> Vec<Vec<&str>> {
 
             let is_title_case =
                 !word_clean.is_empty() && word_clean.chars().nth(0).unwrap().is_uppercase();
-            let conjoining =
-                last_title_or_name.len() > 1 && (word_clean == "the" || word_clean == "of");
+            let conjoining = !is_title_case
+                && last_title_or_name.len() > 1
+                && (word_clean == "the" || word_clean == "of" || word_clean == "for");
             let add_to_phrase = is_title_case || conjoining;
             if add_to_phrase {
                 last_title_or_name.push(word_clean);

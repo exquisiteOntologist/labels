@@ -78,6 +78,19 @@ pub fn tally_intersecting_phrases<'a>(
             }
         }
 
+        if phrase.len() == 1 {
+            let mut is_acronym: bool = true;
+            'p_chars: for c in phrase[0].chars() {
+                if c.is_uppercase() == false {
+                    is_acronym = false;
+                    break 'p_chars;
+                }
+            }
+            if is_acronym {
+                tally *= 2;
+            }
+        }
+
         // perhaps the shorter AND the longer word
         // should both gain relevance,
         // not just the longer?

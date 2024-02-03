@@ -1,12 +1,13 @@
 use std::error::Error;
 use std::io;
 
-use labels::samples::articles::SAMPLE_ARTICLE_GENETICS;
+use labels::samples::articles::{SAMPLE_ARTICLE_GENETICS, SAMPLE_ARTICLE_PANTHERS};
 use labels::scoring::tally::{tally_intersecting_phrases, tally_phrases};
 use labels::text::extraction::phrase_extraction;
 
 fn main() -> io::Result<()> {
     _ = my_basic_experiment(SAMPLE_ARTICLE_GENETICS);
+    _ = my_basic_experiment(SAMPLE_ARTICLE_PANTHERS);
 
     Ok(())
 }
