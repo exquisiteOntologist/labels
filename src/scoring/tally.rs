@@ -6,6 +6,11 @@ pub fn tally_phrases<'a>(words: &Vec<Vec<&'a str>>) -> Vec<(Vec<&'a str>, i32)> 
     let mut word_tallies: Vec<(Vec<&str>, i32)> = vec![];
     let mut prior_word: Vec<&str> = vec![];
     let mut tally: i32 = 1;
+
+    if words.is_empty() {
+        return word_tallies;
+    }
+
     for word in words {
         // Doesn't handle last word in text
         if vec_eq(&word, &prior_word) {

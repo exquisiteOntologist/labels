@@ -6,7 +6,7 @@ use super::prep::{clean_word, word_without_extensions};
 /// From text extract individual words or phrases into a vector
 pub fn phrase_extraction(text: &str) -> Vec<Vec<&str>> {
     let words: Vec<&str> = text.split(&[' ', '[', ']', '(', ')']).collect();
-    let mut phrases_out: Vec<Vec<&str>> = vec![vec![]];
+    let mut phrases_out: Vec<Vec<&str>> = vec![];
     let mut last_title_or_name: Vec<&str> = vec![];
 
     'words: for word in words {
@@ -46,14 +46,22 @@ pub fn phrase_extraction(text: &str) -> Vec<Vec<&str>> {
 
         // Pushing if not empty outside 'word means we may capture skipped phrase in theoretical scenario
         if last_title_or_name.len() != 0 {
-            phrases_out.push(last_title_or_name.to_vec());
+            let phrase = last_title_or_name.to_vec();
+            if phrase.is_empty() {
+                println!("found empty");
+            }
+            phrases_out.push(phrase);
             last_title_or_name.clear();
         }
     }
 
     // If the very last word was in a phrase, push it too
     if last_title_or_name.len() != 0 {
-        phrases_out.push(last_title_or_name.to_vec());
+        let phrase = last_title_or_name.to_vec();
+        if phrase.is_empty() {
+            println!("found empty at end");
+        }
+        phrases_out.push(phrase);
     }
 
     phrases_out.sort();
