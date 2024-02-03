@@ -36,13 +36,13 @@ fn my_basic_experiment(article: &str) -> Result<(), Box<dyn Error>> {
 
     let mut tallies_inc_intersections = tally_intersecting_phrases(&word_tallies);
 
-    for (word, tally) in &tallies_inc_intersections {
-        println!(
-            "tally and intersections: {:1} {:2}",
-            word.join(" ").to_string(),
-            tally.to_string()
-        );
-    }
+    // for (word, tally) in &tallies_inc_intersections {
+    //     println!(
+    //         "tally and intersections: {:1} {:2}",
+    //         word.join(" ").to_string(),
+    //         tally.to_string()
+    //     );
+    // }
 
     tallies_inc_intersections.sort_by(|(_, a), (_, b)| b.cmp(a));
 
@@ -54,6 +54,10 @@ fn my_basic_experiment(article: &str) -> Result<(), Box<dyn Error>> {
 
     for i in 0..max {
         let (word, tally) = &tallies_inc_intersections[i];
+        if word.is_empty() {
+            println!("Identified whitespace - - - !!!");
+            // yep, it's not whitespace but instead a word of 0 length
+        }
         println!(
             "top phrase: {:1} \"{:2}\" {:3}",
             i,
@@ -61,9 +65,6 @@ fn my_basic_experiment(article: &str) -> Result<(), Box<dyn Error>> {
             tally.to_string()
         );
     }
-
-    // TODO: Next comes scoring for intersecting words;
-    // words that contain other words' characters.
 
     Ok(())
 }
