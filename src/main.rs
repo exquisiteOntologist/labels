@@ -1,9 +1,8 @@
 use std::error::Error;
 use std::io;
 
+use labels::actions::collect_word_tallies_with_intersections;
 use labels::samples::articles::{SAMPLE_ARTICLE_GENETICS, SAMPLE_ARTICLE_PANTHERS};
-use labels::scoring::tally::{tally_intersecting_phrases, tally_phrases};
-use labels::text::extraction::phrase_extraction;
 
 fn main() -> io::Result<()> {
     _ = my_basic_experiment(SAMPLE_ARTICLE_GENETICS);
@@ -24,18 +23,9 @@ mod tests {
     }
 }
 
-const MAX_LABELS: usize = 30;
-
 fn my_basic_experiment(article: &str) -> Result<(), Box<dyn Error>> {
-    let words_wanted: Vec<Vec<&str>> = phrase_extraction(article);
-
-    // count similars
-    let word_tallies: Vec<(Vec<&str>, i32)> = tally_phrases(&words_wanted);
-
-    // change sorting from alphabetical to tally score
-    // word_tallies.sort_by(|(_, a), (_, b)| a.cmp(b));
-
-    let mut tallies_inc_intersections = tally_intersecting_phrases(&word_tallies);
+    let mut tallies_inc_intersections = collect_word_tallies_with_intersections(article);
+    // after this we just print all the tallies and then sort by score and print top MAX_LABELS
 
     for (word, tally) in &tallies_inc_intersections {
         println!(
@@ -47,6 +37,7 @@ fn my_basic_experiment(article: &str) -> Result<(), Box<dyn Error>> {
 
     tallies_inc_intersections.sort_by(|(_, a), (_, b)| b.cmp(a));
 
+    const MAX_LABELS: usize = 30;
     let max = if MAX_LABELS > tallies_inc_intersections.len() {
         tallies_inc_intersections.len()
     } else {

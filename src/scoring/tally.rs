@@ -78,6 +78,7 @@ pub fn tally_intersecting_phrases<'a>(
             }
         }
 
+        // TODO: evaluate moving somewhere not meant just for tallying intersecting.
         if phrase.len() == 1 {
             let mut is_acronym: bool = true;
             'p_chars: for c in phrase[0].chars() {
