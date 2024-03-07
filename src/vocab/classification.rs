@@ -14,8 +14,27 @@ pub enum CLASSIFICATION {
     War,
 }
 
-pub const WORD_COMMERCE_CLASSIFICATIONS: [(&str, CLASSIFICATION); 1] =
-    [("markets", CLASSIFICATION::Markets)];
+pub const CLASSIFICATION_LABELS: [(CLASSIFICATION, &str); 11] = [
+    (CLASSIFICATION::Art, "Art"),
+    (CLASSIFICATION::Creative, "Creative"),
+    (CLASSIFICATION::Crime, "Crime"),
+    (CLASSIFICATION::Life, "Life"),
+    (CLASSIFICATION::Markets, "Markets"),
+    (CLASSIFICATION::Media, "Media"),
+    (
+        CLASSIFICATION::LaunderingAndGambling,
+        "Laundering & Gambling",
+    ),
+    (CLASSIFICATION::Law, "Law"),
+    (CLASSIFICATION::Politics, "Politics"),
+    (CLASSIFICATION::Sport, "Sport"),
+    (CLASSIFICATION::War, "War"),
+];
+
+pub const WORD_COMMERCE_CLASSIFICATIONS: [(&str, CLASSIFICATION); 2] = [
+    ("business", CLASSIFICATION::Markets),
+    ("markets", CLASSIFICATION::Markets),
+];
 
 pub const WORD_CREATIVE_ARTS_CLASSIFICATIONS: [(&str, CLASSIFICATION); 8] = [
     ("artwork", CLASSIFICATION::Art),
@@ -56,18 +75,22 @@ pub const WORD_NEWS_POLITICS_CLASSIFICATIONS: [(&str, CLASSIFICATION); 6] = [
     ("stoned", CLASSIFICATION::Crime),
 ];
 
-pub const WORD_SPORT_CLASSIFICATIONS: [(&str, CLASSIFICATION); 14] = [
+pub const WORD_SPORT_CLASSIFICATIONS: [(&str, CLASSIFICATION); 18] = [
     ("AFL", CLASSIFICATION::Sport),
     ("baseball", CLASSIFICATION::Sport),
     ("cricket", CLASSIFICATION::Sport),
     ("professional basketball", CLASSIFICATION::Sport),
     ("football", CLASSIFICATION::Sport),
+    ("horse races", CLASSIFICATION::Sport),
     ("horse races", CLASSIFICATION::LaunderingAndGambling),
+    ("horse racing", CLASSIFICATION::Sport),
     ("horse racing", CLASSIFICATION::LaunderingAndGambling),
     ("innings", CLASSIFICATION::Sport),
     ("NBA", CLASSIFICATION::Sport),
     ("NRL", CLASSIFICATION::Sport),
     ("olympic swimming", CLASSIFICATION::Sport),
+    ("poker", CLASSIFICATION::Sport),
+    ("poker", CLASSIFICATION::LaunderingAndGambling),
     ("soccer", CLASSIFICATION::Sport),
     ("softball", CLASSIFICATION::Sport),
     ("sports", CLASSIFICATION::Sport),
@@ -87,4 +110,15 @@ pub fn all_classifications<'a>() -> Vec<(&'a str, CLASSIFICATION)> {
     .into_iter()
     .flatten()
     .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::all_classifications;
+
+    #[test]
+    fn classifications_list_populates() {
+        let list = all_classifications();
+        assert!(list.is_empty() == false);
+    }
 }
