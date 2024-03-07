@@ -31,9 +31,35 @@ pub const CLASSIFICATION_LABELS: [(CLASSIFICATION, &str); 11] = [
     (CLASSIFICATION::War, "War"),
 ];
 
-pub const WORD_COMMERCE_CLASSIFICATIONS: [(&str, CLASSIFICATION); 2] = [
+pub const WORD_COMMERCE_CLASSIFICATIONS: [(&str, CLASSIFICATION); 28] = [
+    ("bank", CLASSIFICATION::Markets),
+    ("banks", CLASSIFICATION::Markets),
+    ("bonds", CLASSIFICATION::Markets),
+    ("bought", CLASSIFICATION::Markets),
+    ("brokerage", CLASSIFICATION::Markets),
     ("business", CLASSIFICATION::Markets),
+    ("cash", CLASSIFICATION::Markets),
+    ("coins", CLASSIFICATION::Markets),
+    ("commodities", CLASSIFICATION::Markets),
+    ("commodity", CLASSIFICATION::Markets),
+    ("deed", CLASSIFICATION::Markets),
+    ("deeds", CLASSIFICATION::Markets),
+    ("dollars", CLASSIFICATION::Markets),
+    ("euro", CLASSIFICATION::Markets),
+    ("euros", CLASSIFICATION::Markets),
+    ("guarantees", CLASSIFICATION::Markets),
+    ("market", CLASSIFICATION::Markets),
     ("markets", CLASSIFICATION::Markets),
+    ("owner", CLASSIFICATION::Markets),
+    ("product", CLASSIFICATION::Markets),
+    ("property", CLASSIFICATION::Markets),
+    ("rouble", CLASSIFICATION::Markets),
+    ("roubles", CLASSIFICATION::Markets),
+    ("shares", CLASSIFICATION::Markets),
+    ("shipments", CLASSIFICATION::Markets),
+    ("sold", CLASSIFICATION::Markets),
+    ("stocks", CLASSIFICATION::Markets),
+    ("valuable", CLASSIFICATION::Markets),
 ];
 
 pub const WORD_CREATIVE_ARTS_CLASSIFICATIONS: [(&str, CLASSIFICATION); 8] = [
@@ -97,6 +123,7 @@ pub const WORD_SPORT_CLASSIFICATIONS: [(&str, CLASSIFICATION); 18] = [
 ];
 
 /// All classifications combined into a single list.
+/// Could be used directly for comparison or inserted into a DB.
 pub fn all_classifications<'a>() -> Vec<(&'a str, CLASSIFICATION)> {
     vec![
         Vec::from(WORD_COMMERCE_CLASSIFICATIONS),
