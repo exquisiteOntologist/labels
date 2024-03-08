@@ -22,7 +22,8 @@ pub fn utf8_slice_mine(string: &str, start: usize, end: usize) -> &str {
     &string[start_pos..end_pos]
 }
 
-/// Slice a string slice from start to end
+/// Slice a string slice from start to end;
+/// Even when the string has characters that are more than a single byte in size.
 /// https://stackoverflow.com/questions/51982999/slice-a-string-containing-unicode-chars
 pub fn utf8_slice(string: &str, start: usize, end: usize) -> Option<&str> {
     // assert!(end >= start);
@@ -43,6 +44,8 @@ pub fn utf8_slice(string: &str, start: usize, end: usize) -> Option<&str> {
     })
 }
 
+/// Get the UTF-8 byte length of string.
+/// Characters can be more than a single byte in size.
 pub fn str_size_utf8(s: &str, start: usize, end: usize) -> usize {
     let mut size: usize = 0;
     let mut index: usize = 0;
