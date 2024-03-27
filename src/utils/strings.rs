@@ -16,10 +16,19 @@ pub fn str_get_len<'a>(s: &'a str) -> usize {
 pub fn utf8_slice_mine(string: &str, start: usize, end: usize) -> &str {
     // println!("{:?}", string.chars());
     // println!("s {:1} e {:2}", start, end);
-    let start_pos = string.char_indices().nth(start).unwrap().0;
-    let end_pos = string.char_indices().nth(end).unwrap().0;
+    let start_pos = string.char_indices().nth(start);
+    let end_pos = string.char_indices().nth(end);
+
+    if start_pos.is_none() || end_pos.is_none() || end < start {
+        eprintln!(
+            "Could not get char indice for \"{:1}\" {:2} {:3}",
+            string, start, end
+        );
+        return string;
+    }
+
     // println!("sp {:1} ep {:2}", start_pos, end_pos);
-    &string[start_pos..end_pos]
+    &string[start_pos.unwrap().0..end_pos.unwrap().0].trim()
 }
 
 /// Slice a string slice from start to end;

@@ -7,12 +7,18 @@ use crate::utils::strings::{str_first_char, str_get_len, str_last_char, utf8_sli
 /// It doesn't panic.
 pub fn clean_word<'a>(word: &'a str) -> Result<&'a str, Box<dyn Error>> {
     let mut word_clean: &str = word;
-    while !word_clean.is_empty() && str_first_char(&word_clean).is_alphanumeric() == false {
+    while !word_clean.is_empty()
+        && str_first_char(&word_clean).is_alphanumeric() == false
+        && word_clean.len() > 1
+    {
         let word_len = str_get_len(word_clean);
         // word_clean = utf8_slice(word_clean, 1, word_clean.len() - 1).unwrap_or("");
         word_clean = utf8_slice_mine(word_clean, 1, word_len - 1);
     }
-    while !word_clean.is_empty() && str_last_char(word_clean).is_alphanumeric() == false {
+    while !word_clean.is_empty()
+        && str_last_char(word_clean).is_alphanumeric() == false
+        && word_clean.len() > 1
+    {
         if (word_clean.ends_with("s’")) && !word_clean.ends_with(".’") {
             break;
         }
