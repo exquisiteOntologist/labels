@@ -2,24 +2,27 @@ use std::error::Error;
 use std::io;
 
 use labels::actions::collect_word_tallies_with_intersections;
-use labels::samples::articles::{SAMPLE_ARTICLE_GENETICS, SAMPLE_ARTICLE_PANTHERS};
+use labels::samples::articles::{
+    SAMPLE_ARTICLE_GENETICS, SAMPLE_ARTICLE_PANTHERS, SAMPLE_ARTICLE_WIKIPEDIA,
+};
 
 fn main() -> io::Result<()> {
     _ = my_basic_experiment(SAMPLE_ARTICLE_GENETICS);
     _ = my_basic_experiment(SAMPLE_ARTICLE_PANTHERS);
+    _ = my_basic_experiment(SAMPLE_ARTICLE_WIKIPEDIA);
 
     Ok(())
 }
 
 #[cfg(test)]
 mod tests {
-    use labels::samples::articles::SAMPLE_ARTICLE_PANTHERS;
+    use labels::samples::articles::SAMPLE_ARTICLE_WIKIPEDIA;
 
     use super::*;
 
     #[test]
     fn test_tally() {
-        _ = my_basic_experiment(SAMPLE_ARTICLE_PANTHERS);
+        _ = my_basic_experiment(SAMPLE_ARTICLE_WIKIPEDIA);
     }
 }
 

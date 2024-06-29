@@ -13,7 +13,7 @@ pub fn str_get_len<'a>(s: &'a str) -> usize {
     s.char_indices().count()
 }
 
-pub fn utf8_slice_mine(string: &str, start: usize, end: usize) -> &str {
+pub fn utf8_slice_old<'a>(string: &'a str, start: usize, end: usize) -> &'a str {
     // println!("{:?}", string.chars());
     // println!("s {:1} e {:2}", start, end);
     let start_pos = string.char_indices().nth(start);
@@ -34,7 +34,7 @@ pub fn utf8_slice_mine(string: &str, start: usize, end: usize) -> &str {
 /// Slice a string slice from start to end;
 /// Even when the string has characters that are more than a single byte in size.
 /// https://stackoverflow.com/questions/51982999/slice-a-string-containing-unicode-chars
-pub fn utf8_slice(string: &str, start: usize, end: usize) -> Option<&str> {
+pub fn utf8_slice_stack_overflow<'a>(string: &'a str, start: usize, end: usize) -> Option<&'a str> {
     // assert!(end >= start);
     // string.char_indices().nth(start).and_then(|(start_pos, _)| {
     //     string[str_size_utf8(string, 0, start_pos)..]
