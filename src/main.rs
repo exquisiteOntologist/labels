@@ -42,8 +42,16 @@ mod tests {
                     .into_iter()
             )
         );
-        assert_eq!(results.get(0).unwrap().phrase.get(0).unwrap(), &"There");
         assert!(has_problem == false);
+        assert!(results
+            .iter()
+            .any(|r| r.phrase.get(0).unwrap_or(&"") == &"There"));
+        assert!(results
+            .iter()
+            .any(|r| r.phrase.get(0).unwrap_or(&"") == &"epidemic"));
+        assert!(results
+            .iter()
+            .any(|r| r.phrase.get(0).unwrap_or(&"") == &"Elected"));
     }
 }
 

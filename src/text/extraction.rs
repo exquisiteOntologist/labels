@@ -7,7 +7,10 @@ use super::prep::{clean_word, word_without_extensions};
 pub fn phrase_extraction<'a>(text: &'a str) -> Vec<Vec<&'a str>> {
     // let words: Vec<&str> = text.split(&[' ', '[', ']', '(', ')', "”"]).collect();
     let words: Vec<&str> = text
-        .split(|c: char| c.is_whitespace() || (c.is_ascii_punctuation() && c != '.'))
+        .split(|c: char| {
+            c.is_whitespace()
+                || ((c.is_ascii_punctuation() || !c.is_ascii_alphanumeric()) && c != '.')
+        })
         .collect();
     let mut phrases_out: Vec<Vec<&str>> = vec![];
     let mut last_title_or_name: Vec<&str> = vec![];
