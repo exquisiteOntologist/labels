@@ -4,7 +4,7 @@ use crate::vocab::common::UNWANTED_CONJUGATES;
 use super::prep::{clean_word, word_without_extensions};
 
 /// From text extract individual words or phrases into a vector
-pub fn phrase_extraction(text: &str) -> Vec<Vec<&str>> {
+pub fn phrase_extraction<'a>(text: &'a str) -> Vec<Vec<&'a str>> {
     // let words: Vec<&str> = text.split(&[' ', '[', ']', '(', ')', "”"]).collect();
     let words: Vec<&str> = text
         .split(|c: char| c.is_whitespace() || (c.is_ascii_punctuation() && c != '.'))
