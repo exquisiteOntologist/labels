@@ -16,7 +16,7 @@ fn main() -> io::Result<()> {
 
 #[cfg(test)]
 mod tests {
-    use labels::samples::articles::SAMPLE_ARTICLE_WIKIPEDIA;
+    use labels::samples::{articles::SAMPLE_ARTICLE_WIKIPEDIA, problems::PROBLEM_A};
 
     use super::*;
 
@@ -24,9 +24,21 @@ mod tests {
     fn test_tally() {
         _ = my_basic_experiment(SAMPLE_ARTICLE_WIKIPEDIA);
     }
+
+    #[test]
+    fn test_problem_a() {
+        let results = my_basic_experiment(PROBLEM_A).unwrap();
+        let has_problem = results
+            .iter()
+            .any(|(s_vec, _)| s_vec.get(0) == Some(&"epidemic.”Elected"));
+        assert_eq!(results.get(0).unwrap().0.get(0).unwrap(), &"There");
+        assert!(has_problem == false);
+    }
 }
 
-fn my_basic_experiment(article: &str) -> Result<(), Box<dyn Error>> {
+const MAX_LABELS: usize = 30;
+
+fn my_basic_experiment(article: &str) -> Result<Vec<(Vec<&str>, i32)>, Box<dyn Error>> {
     let mut tallies_inc_intersections = collect_word_tallies_with_intersections(article);
     // after this we just print all the tallies and then sort by score and print top MAX_LABELS
 
@@ -40,7 +52,6 @@ fn my_basic_experiment(article: &str) -> Result<(), Box<dyn Error>> {
 
     tallies_inc_intersections.sort_by(|(_, a), (_, b)| b.cmp(a));
 
-    const MAX_LABELS: usize = 30;
     let max = if MAX_LABELS > tallies_inc_intersections.len() {
         tallies_inc_intersections.len()
     } else {
@@ -63,5 +74,5 @@ fn my_basic_experiment(article: &str) -> Result<(), Box<dyn Error>> {
         );
     }
 
-    Ok(())
+    Ok(tallies_inc_intersections)
 }
