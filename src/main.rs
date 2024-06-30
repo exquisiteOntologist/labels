@@ -32,6 +32,16 @@ mod tests {
         let has_problem = results
             .iter()
             .any(|pt| pt.phrase.get(0) == Some(&"epidemic.”Elected"));
+        println!(
+            "test a result: {:?}",
+            String::from_iter(
+                results
+                    .clone()
+                    .into_iter()
+                    .map(|pt| pt.get_phrase())
+                    .into_iter()
+            )
+        );
         assert_eq!(results.get(0).unwrap().phrase.get(0).unwrap(), &"There");
         assert!(has_problem == false);
     }

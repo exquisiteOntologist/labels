@@ -7,6 +7,12 @@ pub struct PhraseTally<'a> {
     pub total: i32,
 }
 
+impl<'a> PhraseTally<'a> {
+    pub fn get_phrase(&self) -> String {
+        String::from_iter(self.phrase.iter().map(|p| p.to_owned()))
+    }
+}
+
 impl<'a> Clone for PhraseTally<'a> {
     fn clone(&self) -> PhraseTally<'a> {
         PhraseTally {
