@@ -4,12 +4,12 @@ version = 3
 
 [[package]]
 name = "gather"
-version = "0.1.0"
-source = "git+https://github.com/exquisiteOntologist/gather#e7fe303c67d15b34edefadf1a76c9532861f8a6e"
+version = "1.0.0"
+source = "git+https://github.com/exquisiteOntologist/gather#5585a1ac6b0ebea602c4b3224a111786728486f2"
 
 [[package]]
 name = "labels"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "gather",
 ]

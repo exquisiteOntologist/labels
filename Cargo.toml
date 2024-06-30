@@ -1,11 +1,11 @@
 [package]
 name = "labels"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["JV <auburn.mutiny0e@icloud.com>"]
 edition = "2021"
 
 [dependencies]
-gather = { git = "https://github.com/exquisiteOntologist/gather" }
+gather = { version = "1.0.0", git = "https://github.com/exquisiteOntologist/gather" }
 
 [profile.release]
 
