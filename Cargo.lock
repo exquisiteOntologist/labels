@@ -9,7 +9,7 @@ source = "git+https://github.com/exquisiteOntologist/gather#5585a1ac6b0ebea602c4
 
 [[package]]
 name = "labels"
-version = "0.1.1"
+version = "0.2.1"
 dependencies = [
  "gather",
 ]

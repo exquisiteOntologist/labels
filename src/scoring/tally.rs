@@ -1,10 +1,45 @@
 use crate::utils::vecs::vec_eq;
 
+pub struct PhraseTally<'a> {
+    /// A phrase, consisting of references to word strings in the source text
+    pub phrase: Vec<&'a str>,
+    /// The number of occurrences of the phrase
+    pub total: i32,
+}
+
+impl<'a> PhraseTally<'a> {
+    pub fn get_phrase(&self) -> String {
+        String::from_iter(self.phrase.iter().map(|p| p.to_owned()))
+    }
+}
+
+impl<'a> Clone for PhraseTally<'a> {
+    fn clone(&self) -> PhraseTally<'a> {
+        PhraseTally {
+            phrase: self.phrase.to_vec(),
+            total: self.total,
+        }
+    }
+
+    fn clone_from(&mut self, source: &Self) {
+        *self = source.clone()
+    }
+}
+
+pub fn tally_phrases_and_intersections<'a>(phrases: &Vec<Vec<&'a str>>) -> Vec<PhraseTally<'a>> {
+    let word_tallies: Vec<PhraseTally<'a>> = tally_phrases(&phrases);
+    let tallies_inc_intersections: Vec<PhraseTally<'a>> = tally_intersecting_phrases(word_tallies);
+
+    tallies_inc_intersections
+}
+
 /// Count instances of a phrase. Requires the words to vec passed in to be sorted alphabetical.
 /// Starts at 1 for each phrase since each is an instance.
-pub fn tally_phrases<'a>(words: &Vec<Vec<&'a str>>) -> Vec<(Vec<&'a str>, i32)> {
-    let mut word_tallies: Vec<(Vec<&str>, i32)> = vec![];
-    let mut prior_word: Vec<&str> = vec![];
+pub fn tally_phrases<'a>(words: &Vec<Vec<&'a str>>) -> Vec<PhraseTally<'a>> {
+    // pub fn tally_phrases<'a>(words: &Vec<Vec<&'a str>>) -> Vec<(Vec<&'a str>, i32)> {
+    // let mut word_tallies: Vec<(Vec<&str>, i32)> = vec![];
+    let mut word_tallies: Vec<PhraseTally> = Vec::new();
+    let mut prior_word: Vec<&str> = Vec::new();
     let mut tally: i32 = 1;
 
     if words.is_empty() {
@@ -16,12 +51,18 @@ pub fn tally_phrases<'a>(words: &Vec<Vec<&'a str>>) -> Vec<(Vec<&'a str>, i32)> 
         if vec_eq(&word, &prior_word) {
             tally += 1;
         } else {
-            word_tallies.push((prior_word, tally));
+            word_tallies.push(PhraseTally {
+                phrase: prior_word,
+                total: tally,
+            });
             tally = 1;
         }
         prior_word = word.to_vec();
     }
-    word_tallies.push((prior_word, 1));
+    word_tallies.push(PhraseTally {
+        phrase: prior_word,
+        total: 1,
+    });
     word_tallies
 }
 
@@ -35,33 +76,26 @@ pub fn tally_phrases<'a>(words: &Vec<Vec<&'a str>>) -> Vec<(Vec<&'a str>, i32)> 
 /// because it's still iterating over the original vector.
 /// TODO: Handle plurals scoring or pre-cleaning.
 pub fn tally_intersecting_phrases<'a>(
-    phrase_tallies: &Vec<(Vec<&'a str>, i32)>,
-) -> Vec<(Vec<&'a str>, i32)> {
+    phrase_tallies: Vec<PhraseTally<'a>>,
+) -> Vec<PhraseTally<'a>> {
     if phrase_tallies.len() < 2 {
-        return phrase_tallies.to_vec();
+        return phrase_tallies.clone();
     }
 
-    let mut new_phrase_tallies: Vec<(Vec<&'a str>, i32)> = Default::default();
+    let mut new_phrase_tallies: Vec<PhraseTally<'a>> = Vec::new();
 
     // each tally represents a single term
     for i in 1..phrase_tallies.len() {
-        let (prior_phrase, prior_tally) = if i == 1 {
+        let pt_prior = if i == 1 {
             &phrase_tallies[i - 1]
         } else {
             &new_phrase_tallies[i - 1]
         };
-        let (phrase, mut tally) = &phrase_tallies[i];
+        let pt = &phrase_tallies[i];
+        let mut tally = pt.total;
 
         // because of our alphabetical sorting, the prior is always shorter
-        // (this variable is redundant)
-        // let prior_longer: bool = false;
-        let shorter_len: usize = prior_phrase.len();
-        // let prior_longer: bool = prior_phrase.len() > phrase.len();
-        // let shorter_len: usize = if prior_longer {
-        //     phrase.len()
-        // } else {
-        //     prior_phrase.len()
-        // };
+        let shorter_len: usize = pt_prior.phrase.len();
 
         // here we are iterating through the words of the
         // current and prior phrases,
@@ -69,8 +103,8 @@ pub fn tally_intersecting_phrases<'a>(
         // the longer phrase.
         let mut shorter_fully_in_longer: bool = true;
         for i in 0..shorter_len {
-            let pp_word = prior_phrase[i];
-            let word = phrase[i];
+            let pp_word = pt_prior.phrase[i];
+            let word = pt.phrase[i];
 
             if pp_word != word {
                 shorter_fully_in_longer = false;
@@ -78,10 +112,9 @@ pub fn tally_intersecting_phrases<'a>(
             }
         }
 
-        // TODO: evaluate moving somewhere not meant just for tallying intersecting.
-        if phrase.len() == 1 {
+        if pt.phrase.len() == 1 {
             let mut is_acronym: bool = true;
-            'p_chars: for c in phrase[0].chars() {
+            'p_chars: for c in pt.phrase[0].chars() {
                 if c.is_uppercase() == false {
                     is_acronym = false;
                     break 'p_chars;
@@ -109,14 +142,17 @@ pub fn tally_intersecting_phrases<'a>(
             //     tally += prior_tally;
             // }
             // assuming prior phrase is shorter
-            tally += prior_tally;
+            tally += pt_prior.total;
         }
 
         // since we start at one we also have to add the prior to the list (pos 0)
         if i == 1 {
-            new_phrase_tallies.push((prior_phrase.to_vec(), *prior_tally));
+            new_phrase_tallies.push(pt_prior.clone());
         }
-        new_phrase_tallies.push((phrase.to_vec(), tally));
+        new_phrase_tallies.push(PhraseTally {
+            phrase: pt.phrase.to_vec(),
+            total: tally,
+        });
     }
     new_phrase_tallies
 }

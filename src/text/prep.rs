@@ -14,7 +14,7 @@ pub fn clean_word<'a>(word: &'a str) -> Result<&'a str, Box<dyn Error>> {
         && word_clean.chars().count() > 1
     {
         let word_len = str_get_len(word_clean);
-        word_clean = match utf8_slice(word_clean, 1, word_len - 1) {
+        word_clean = match utf8_slice(word_clean, 1, word_len) {
             Ok(v) => v,
             Err(_) => word_clean,
         }

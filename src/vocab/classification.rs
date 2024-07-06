@@ -1,3 +1,5 @@
+use std::slice::Iter;
+
 /// Common classifications.
 /// If multiple apply to your content, it is recommended to go by weight.
 pub enum CLASSIFICATION {
@@ -14,7 +16,7 @@ pub enum CLASSIFICATION {
     War,
 }
 
-pub const CLASSIFICATION_LABELS: [(CLASSIFICATION, &str); 11] = [
+pub const CLASSIFICATION_LABELS: &'static [(CLASSIFICATION, &str)] = &[
     (CLASSIFICATION::Art, "Art"),
     (CLASSIFICATION::Creative, "Creative"),
     (CLASSIFICATION::Crime, "Crime"),
@@ -31,7 +33,7 @@ pub const CLASSIFICATION_LABELS: [(CLASSIFICATION, &str); 11] = [
     (CLASSIFICATION::War, "War"),
 ];
 
-pub const WORD_COMMERCE_CLASSIFICATIONS: [(&str, CLASSIFICATION); 28] = [
+pub const WORD_COMMERCE_CLASSIFICATIONS: &'static [(&str, CLASSIFICATION)] = &[
     ("bank", CLASSIFICATION::Markets),
     ("banks", CLASSIFICATION::Markets),
     ("bonds", CLASSIFICATION::Markets),
@@ -62,7 +64,7 @@ pub const WORD_COMMERCE_CLASSIFICATIONS: [(&str, CLASSIFICATION); 28] = [
     ("valuable", CLASSIFICATION::Markets),
 ];
 
-pub const WORD_CREATIVE_ARTS_CLASSIFICATIONS: [(&str, CLASSIFICATION); 8] = [
+pub const WORD_CREATIVE_ARTS_CLASSIFICATIONS: &'static [(&str, CLASSIFICATION)] = &[
     ("artwork", CLASSIFICATION::Art),
     ("dance", CLASSIFICATION::Art),
     ("dancer", CLASSIFICATION::Art),
@@ -73,26 +75,26 @@ pub const WORD_CREATIVE_ARTS_CLASSIFICATIONS: [(&str, CLASSIFICATION); 8] = [
     ("song", CLASSIFICATION::Art),
 ];
 
-pub const WORD_LIFE_CLASSIFICATIONS: [(&str, CLASSIFICATION); 4] = [
+pub const WORD_LIFE_CLASSIFICATIONS: &'static [(&str, CLASSIFICATION)] = &[
     ("birth", CLASSIFICATION::Life),
     ("divorce", CLASSIFICATION::Life),
     ("marriage", CLASSIFICATION::Life),
     ("sex", CLASSIFICATION::Life),
 ];
 
-pub const WORD_MEDIA_CLASSIFICATIONS: [(&str, CLASSIFICATION); 4] = [
+pub const WORD_MEDIA_CLASSIFICATIONS: &'static [(&str, CLASSIFICATION)] = &[
     ("book", CLASSIFICATION::Media),
     ("movie", CLASSIFICATION::Media),
     ("music", CLASSIFICATION::Media),
     ("television", CLASSIFICATION::Media),
 ];
 
-pub const WORD_MEDICINE_CLASSIFICATIONS: [(&str, CLASSIFICATION); 2] = [
+pub const WORD_MEDICINE_CLASSIFICATIONS: &'static [(&str, CLASSIFICATION)] = &[
     ("pandemic", CLASSIFICATION::Media),
     ("vaccination", CLASSIFICATION::Media),
 ];
 
-pub const WORD_NEWS_POLITICS_CLASSIFICATIONS: [(&str, CLASSIFICATION); 6] = [
+pub const WORD_NEWS_POLITICS_CLASSIFICATIONS: &'static [(&str, CLASSIFICATION)] = &[
     ("genocide", CLASSIFICATION::Crime),
     ("murder", CLASSIFICATION::Crime),
     ("murderer", CLASSIFICATION::Crime),
@@ -101,7 +103,7 @@ pub const WORD_NEWS_POLITICS_CLASSIFICATIONS: [(&str, CLASSIFICATION); 6] = [
     ("stoned", CLASSIFICATION::Crime),
 ];
 
-pub const WORD_SPORT_CLASSIFICATIONS: [(&str, CLASSIFICATION); 18] = [
+pub const WORD_SPORT_CLASSIFICATIONS: &'static [(&str, CLASSIFICATION)] = &[
     ("AFL", CLASSIFICATION::Sport),
     ("baseball", CLASSIFICATION::Sport),
     ("cricket", CLASSIFICATION::Sport),
@@ -124,19 +126,23 @@ pub const WORD_SPORT_CLASSIFICATIONS: [(&str, CLASSIFICATION); 18] = [
 
 /// All classifications combined into a single list.
 /// Could be used directly for comparison or inserted into a DB.
-pub fn all_classifications<'a>() -> Vec<(&'a str, CLASSIFICATION)> {
-    vec![
-        Vec::from(WORD_COMMERCE_CLASSIFICATIONS),
-        Vec::from(WORD_CREATIVE_ARTS_CLASSIFICATIONS),
-        Vec::from(WORD_LIFE_CLASSIFICATIONS),
-        Vec::from(WORD_MEDIA_CLASSIFICATIONS),
-        Vec::from(WORD_MEDICINE_CLASSIFICATIONS),
-        Vec::from(WORD_NEWS_POLITICS_CLASSIFICATIONS),
-        Vec::from(WORD_SPORT_CLASSIFICATIONS),
-    ]
-    .into_iter()
-    .flatten()
-    .collect()
+pub fn all_classifications() -> Vec<&'static (&'static str, CLASSIFICATION)> {
+    let groups = vec![
+        WORD_COMMERCE_CLASSIFICATIONS,
+        WORD_CREATIVE_ARTS_CLASSIFICATIONS,
+        WORD_LIFE_CLASSIFICATIONS,
+        WORD_MEDIA_CLASSIFICATIONS,
+        WORD_MEDICINE_CLASSIFICATIONS,
+        WORD_NEWS_POLITICS_CLASSIFICATIONS,
+        WORD_SPORT_CLASSIFICATIONS,
+    ];
+
+    let mut classifications: Vec<&'static (&'static str, CLASSIFICATION)> = Vec::new();
+    for group in groups {
+        classifications.extend::<Iter<(&'static str, CLASSIFICATION)>>(group.iter());
+    }
+
+    classifications
 }
 
 #[cfg(test)]
