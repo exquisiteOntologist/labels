@@ -106,7 +106,10 @@ pub fn sans_conjugates<'a>(mut phrases: Vec<Vec<&'a str>>) -> Vec<Vec<&'a str>> 
     for_removal.reverse();
 
     for i in for_removal {
-        phrases.remove(i);
+        // there is a scenario where the index doesn't exist
+        if let Some(_p) = phrases.get(i) {
+            phrases.remove(i);
+        }
     }
 
     phrases
